@@ -11,17 +11,18 @@ int main(int argc, char *argv[])
 	int sockfd;
 	int n,len,flag;
 	int pid;
+	char servip[15+1] = SERVERIP;
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
 	inet_pton(AF_INET, SERVERIP, &servaddr.sin_addr);
-	servaddr.sin_port = htons(SERVPORT);
+	servaddr.sin_port = htons(servip);
 
 	if(!connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)))
 		printf("Connect succeed!\n");
 	else{
-		printf("Cant connect to the server:%s\n", SERVERIP);
+		printf("Cant connect to the server:%s\n", servip);
 		exit(1);
 	}
 

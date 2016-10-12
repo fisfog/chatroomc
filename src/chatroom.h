@@ -15,6 +15,7 @@
 /* socket lib */
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define MAXLEN 256
 #define SERVPORT 20099

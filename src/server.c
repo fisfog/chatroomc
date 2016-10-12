@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 	bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 
 	listen(listenfd, 20);
+	printf("Accepting connect...\n");
 
 	while(1){
 		cliaddr_len = sizeof(cliaddr);

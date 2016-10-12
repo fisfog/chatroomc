@@ -11,7 +11,7 @@ client: $(OBJC)
 	gcc $(OBJC) -o client
 
 server.o: server.c chatroom.h
-	gcc -c server.c
+	gcc -c server.c 
 
 client.o: client.c chatroom.h
 	gcc -c client.c
