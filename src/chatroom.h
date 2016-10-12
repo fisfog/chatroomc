@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <error.h>
+#include <errno.h>
 
 /* socket lib */
 #include <sys/socket.h>
@@ -18,9 +18,11 @@
 
 #define MAXLEN 256
 #define SERVPORT 20099
+#define HEADLEN 10 + 1
 
 #endif
 
 ssize_t readn(int, void *, size_t);
 ssize_t writen(int, void *, size_t);
-
+int sendMsg(int, void *, int);
+int recvMsg(int, void *, int *);

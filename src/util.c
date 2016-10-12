@@ -41,5 +41,29 @@ writen(int fd, void *vptr, size_t n)
 		nleft -= nwritten;
 		ptr += nwritten;
 	}
-	return n;
+	return n-nleft;
+}
+
+int
+sendMsg(int fd, void *vptr, int n)
+{
+	char head[HEADLEN];
+	char *ptr = vptr;
+	memset(head, 0x00, sizeof(head));
+	snprintf(head, sizeof(head), "%010d", n);
+	if((writen(fd, head, sizeof(head)))!=sizeof(head)) return -1;
+	if((writen(fd, ptr, n))!=n) return -1;
+	return 0;
+}
+
+int
+recvMsg(int fd, void *vptr, int *n)
+{
+	char head[HEADLEN];
+	char *ptr = vptr;
+	memset(head, 0x00, sizeof(head));
+	if((readn(fd, head, sizeof(head)))!=sizeof(head)) return -1;
+	*n = atoi(head);
+	if((readn(fd, ptr, *n))!=*n) return -1;
+	return 0;
 }
