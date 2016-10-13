@@ -11,6 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <signal.h>
 
 /* socket lib */
 #include <sys/socket.h>
@@ -20,6 +21,7 @@
 /* ipc lib */
 #include <sys/ipc.h>
 #include <sys/msg.h>
+
 
 #define SERVPORT 20099
 
