@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
-	inet_pton(AF_INET, SERVERIP, &servaddr.sin_addr);
-	servaddr.sin_port = htons(servip);
+	inet_pton(AF_INET, (const char *)servip, &servaddr.sin_addr);
+	servaddr.sin_port = htons(SERVPORT);
 
 	if(!connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)))
 		printf("Connect succeed!\n");
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 		while(1){
 			memset(buf2, 0x00, sizeof(buf2));
 			if(recvMsg(sockfd, buf2, &len)<0){
-				printf("Server [%s] closed connection\n", SERVERIP);
+				printf("Server [%s] closed connection\n", servip);
 				break;
 			}
 			printf("> %s\n", buf2);

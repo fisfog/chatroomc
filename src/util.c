@@ -1,6 +1,6 @@
 #include "chatroom.h"
 
-
+/* read n bytes from socket fd buffer*/
 ssize_t
 readn(int fd, void *vptr, size_t n)
 {
@@ -23,6 +23,7 @@ readn(int fd, void *vptr, size_t n)
 	return n-nleft;
 }
 
+/* write n bytes from socket fd buffer*/
 ssize_t
 writen(int fd, void *vptr, size_t n)
 {
@@ -44,6 +45,10 @@ writen(int fd, void *vptr, size_t n)
 	return n-nleft;
 }
 
+/* 
+ * send a msg to socket fd
+ * with msg head
+*/
 int
 sendMsg(int fd, void *vptr, int n)
 {
@@ -56,6 +61,10 @@ sendMsg(int fd, void *vptr, int n)
 	return 0;
 }
 
+/*
+ * recieve a msg from socket fd
+*/
+
 int
 recvMsg(int fd, void *vptr, int *n)
 {
@@ -66,4 +75,39 @@ recvMsg(int fd, void *vptr, int *n)
 	*n = atoi(head);
 	if((readn(fd, ptr, *n))!=*n) return -1;
 	return 0;
+}
+
+/*
+ * Init a SYSV MQ struct
+*/
+message *
+mqMsgSTInit(char *data, long len, long type)
+{
+	message *msg = NULL;
+	msg = (message *)malloc(sizeof(message));
+	memset(msg->mdata, 0x00, sizeof(msg->mdata));
+	if(data!=NULL) strcpy(msg->mdata, data);
+	msg->mlen = len;
+	msg->mtype = type;
+	return msg;
+}
+
+/*
+ * send a mq msg to mq[id]
+*/
+ssize_t
+sendMq(int id, message *mptr)
+{
+	return msgsnd(id, &(mptr->mtype), MAXLEN, 0);
+}
+
+/*
+ * recv a mq msg from mq[id]
+*/
+ssize_t
+recvMq(int id, message *mptr)
+{
+	ssize_t n = msgrcv(id, &(mptr->mtype), MAXLEN, mptr->mtype, 0);
+	mptr->mlen = n;
+	return n;
 }
