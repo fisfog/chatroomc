@@ -1,6 +1,6 @@
 OBJ=server client
 OBJS=server.o util.o servfunc.o
-OBJC=client.o util.o
+OBJC=client.o util.o clifunc.o
 
 all: $(OBJ)
 
@@ -21,6 +21,9 @@ util.o: util.c chatroom.h
 
 servfunc.o: servfunc.c chatroom.h
 	gcc -c servfunc.c
+
+clifunc.o: clifunc.c chatroom.h
+	gcc -c clifunc.c
 
 clean:
 	-rm server client *.o

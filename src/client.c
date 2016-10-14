@@ -26,12 +26,23 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	// recieve welcome message
+	memset(buf, 0x00, sizeof(buf));
+	recvMsg(sockfd, buf, &len);
+	printf("%s\n", buf);
+
+	// login
+	login_cli(sockfd);
+
+	printf("---------------------------------------------------------------\n");
+	
 	pid = fork();
 	if(pid<0){
 		printf("fork err\n");
 		exit(1);
 	}else if(pid>0){
-		while(scanf("%s",buf)!=EOF){
+		while(fgets(buf, MAXLEN, stdin)){
+			memset(&buf[strlen(buf)-1], 0, 1); // delete the last \n
 			sendMsg(sockfd, buf, strlen(buf));
 		}
 	}else{

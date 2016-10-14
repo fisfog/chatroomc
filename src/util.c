@@ -111,3 +111,27 @@ recvMq(int id, message *mptr)
 	mptr->mlen = n;
 	return n;
 }
+
+/*
+ * get local time
+ */
+
+/*
+ * DataTime String with format: "YYYY-MM-DD HH:MM:SS"
+ */
+
+int
+tm2DateTimeStr(struct tm *t, char *dts)
+{
+	sprintf(dts,
+		"%04d-%02d-%02d %02d:%02d:%02d",
+		t->tm_year+1900,
+		t->tm_mon+1,
+		t->tm_mday,
+		t->tm_hour,
+		t->tm_min,
+		t->tm_sec);
+//	printf("DEBUG:tm2DateTimeStr, dts[%s]\n", dts);
+	return 0;
+}
+

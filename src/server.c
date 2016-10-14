@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in servaddr, cliaddr;
 	socklen_t cliaddr_len;
 	char buf[MAXLEN+1];
+	char buf2[MAXLEN] = {0};
 	char addr[INET_ADDRSTRLEN];
 	int listenfd,connfd;
 	int i,n,len;
@@ -49,6 +50,12 @@ int main(int argc, char *argv[])
 			char welcome[100] = {0};
 			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
 			sendMsg(connfd, welcome, strlen(welcome));
+
+
+			loginfo *cli_log_info = (loginfo *)malloc(sizeof(loginfo));
+			cli_log_info->cliaddr = &cliaddr;
+			login_serv(connfd, cli_log_info); // client login
+
 			int pid2 = fork();
 			if(pid2<0){ printf("fork err\n"); continue;}
 			else if(pid2>0){
@@ -59,14 +66,20 @@ int main(int argc, char *argv[])
 						kill(pid2, SIGKILL);
 						break;
 					}
-					printf("recv[%d]:[%s]\n", len, buf);
-
+					printf("CLIENT[%s]PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);
+					
+					time_t t =time(NULL);
+					struct tm *local = localtime(&t);
+					char tt[19+1] = {0};
+					tm2DateTimeStr(local, tt);
+					
+					sprintf(buf2, "(%s) %s: %s", tt, cli_log_info->login_name, buf);
 				//	strcat(buf, "[B]");
 	//				printf("DEBUG: [%d], buf[%s]\n", strlen(buf), buf);
 					client_count = getClientCount(mq_fd);
 					for(i=1;i<=client_count;i++){
 						if(i==cliNo) continue;
-						msg = mqMsgSTInit(buf, len, 10000+i);
+						msg = mqMsgSTInit(buf2, strlen(buf2), 10000+i);
 						sendMq(mq_fd, msg);
 					}
 					putClientCount(mq_fd, client_count);
