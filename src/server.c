@@ -73,7 +73,9 @@ int main(int argc, char *argv[])
 				}
 			}else{
 				while(1){
-					if(recvMq(mq_fd, msg)>=0){
+					msg = mqMsgSTInit(NULL, 0, 10000+cliNo);
+					if(recvMq(mq_fd, msg)<=0) continue;
+					else{
 						sendMsg(connfd, msg->mdata, msg->mlen);
 					}
 				}
