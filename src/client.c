@@ -11,7 +11,16 @@ int main(int argc, char *argv[])
 	int sockfd;
 	int n,len,flag;
 	int pid;
-	char servip[15+1] = SERVERIP;
+	char servip[15+1];
+	int ret;
+
+	if(argc == 2)
+	{
+		strcpy(servip, argv[1]);
+	}else{
+		printf("USAGE: client [serverip]\n");
+		exit(0);
+	}
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
@@ -19,7 +28,9 @@ int main(int argc, char *argv[])
 	inet_pton(AF_INET, (const char *)servip, &servaddr.sin_addr);
 	servaddr.sin_port = htons(SERVPORT);
 
-	if(!connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)))
+	
+	ret = connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
+	if(!ret)
 		printf("Connect succeed!\n");
 	else{
 		printf("Cant connect to the server:%s\n", servip);

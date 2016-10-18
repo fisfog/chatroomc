@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	int i,n,len;
 	int pid;
 	int client_count = 0;
+	int fpid = getpid();
 
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
@@ -28,8 +29,9 @@ int main(int argc, char *argv[])
 	printf("Accepting connect...\n");
 
 	int mq_fd = msgget(IPC_PRIVATE, SVMSG_MODE | IPC_CREAT);
+	printf("msgid:%d\n",mq_fd);
 	putClientCount(mq_fd, client_count);
-	message *msg;
+	message *msg = (message *)malloc(sizeof(message));
 
 	while(1){
 		cliaddr_len = sizeof(cliaddr);
@@ -68,7 +70,7 @@ int main(int argc, char *argv[])
 					}
 					printf("CLIENT[%s]PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);
 					
-					time_t t =time(NULL);
+					time_t t = time(NULL);
 					struct tm *local = localtime(&t);
 					char tt[19+1] = {0};
 					tm2DateTimeStr(local, tt);
@@ -79,14 +81,14 @@ int main(int argc, char *argv[])
 					client_count = getClientCount(mq_fd);
 					for(i=1;i<=client_count;i++){
 						if(i==cliNo) continue;
-						msg = mqMsgSTInit(buf2, strlen(buf2), 10000+i);
+						mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
 						sendMq(mq_fd, msg);
 					}
 					putClientCount(mq_fd, client_count);
 				}
 			}else{
 				while(1){
-					msg = mqMsgSTInit(NULL, 0, 10000+cliNo);
+					mqMsgSTInit(msg, NULL, 0, 10000+cliNo);
 					if(recvMq(mq_fd, msg)<=0) continue;
 					else{
 						sendMsg(connfd, msg->mdata, msg->mlen);
@@ -101,5 +103,11 @@ int main(int argc, char *argv[])
 		}
 	}
 	close(listenfd);
+	free(msg);
+	if(getpid() == fpid){
+		printf("msgctl----------\n");
+		msgctl(mq_fd, IPC_RMID, NULL);
+	}
+
 	return 0;
 }

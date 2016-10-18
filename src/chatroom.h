@@ -24,7 +24,7 @@
 #include <sys/msg.h>
 
 
-#define SERVPORT 20099
+#define SERVPORT 20123
 
 #define MAXLEN 256
 #define HEADLEN 10 + 1
@@ -55,7 +55,7 @@ ssize_t readn(int, void *, size_t);
 ssize_t writen(int, void *, size_t);
 int sendMsg(int, void *, int);
 int recvMsg(int, void *, int *);
-message *mqMsgSTInit(char *, long, long);
+int mqMsgSTInit(message *, char *, long, long);
 ssize_t sendMq(int, message *);
 ssize_t recvMq(int, message *);
 int tm2DateTimeStr(struct tm *, char *);

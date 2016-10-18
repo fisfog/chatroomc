@@ -80,16 +80,14 @@ recvMsg(int fd, void *vptr, int *n)
 /*
  * Init a SYSV MQ struct
 */
-message *
-mqMsgSTInit(char *data, long len, long type)
+int
+mqMsgSTInit(message *msg, char *data, long len, long type)
 {
-	message *msg = NULL;
-	msg = (message *)malloc(sizeof(message));
 	memset(msg->mdata, 0x00, sizeof(msg->mdata));
 	if(data!=NULL) strcpy(msg->mdata, data);
 	msg->mlen = len;
 	msg->mtype = type;
-	return msg;
+	return 0;
 }
 
 /*
