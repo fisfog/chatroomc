@@ -51,8 +51,6 @@ int main(int argc, char *argv[])
 	werase(logwin);
 	delwin(logwin);
 
-	
-
 	// recieve welcome message
 	/*
 	memset(buf, 0x00, sizeof(buf));
@@ -70,7 +68,7 @@ int main(int argc, char *argv[])
 		winin = newwin(0, 0, nrows-1, 0);
 		wprintw(winin, "> ");
 		wrefresh(winin);
-		while(wgetnstr(winin, buf, MAXLEN)){
+		while(!wgetnstr(winin, buf, MAXLEN)){
 			sendMsg(sockfd, buf, strlen(buf));
 			wprintw(winin, "> ");
 			wrefresh(winin);
@@ -78,6 +76,7 @@ int main(int argc, char *argv[])
 		}
 	}else{
 		winout = newwin(nrows-2, 0, 0, 0);
+		scrollok(winout, 1);
 		while(1){
 			memset(buf2, 0x00, sizeof(buf2));
 			if(recvMsg(sockfd, buf2, &len)<0){
