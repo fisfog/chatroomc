@@ -13,3 +13,14 @@ login_cli(int connfd)
 	sendMsg(connfd, nname, strlen(nname));
 	return 0;
 }
+
+int
+login_cli_cgi(int connfd, WINDOW *wp)
+{
+	char nname[50] = {0};
+	wprintw(wp, "please input a nick name: ");
+	wrefresh(wp);
+	wgetnstr(wp, nname, 50);
+	sendMsg(connfd, nname, strlen(nname));
+	return 0;
+}

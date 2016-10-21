@@ -49,14 +49,14 @@ int main(int argc, char *argv[])
 			inet_ntop(AF_INET, &cliaddr.sin_addr, addr, sizeof(addr));
 			printf("Recieved connection form [%s] at PORT [%d]\n", addr, ntohs(cliaddr.sin_port));
 			int cliNo = client_count;
-			char welcome[100] = {0};
-			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
-			sendMsg(connfd, welcome, strlen(welcome));
-
 
 			loginfo *cli_log_info = (loginfo *)malloc(sizeof(loginfo));
 			cli_log_info->cliaddr = &cliaddr;
 			login_serv(connfd, cli_log_info); // client login
+
+			char welcome[100] = {0};
+			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
+			sendMsg(connfd, welcome, strlen(welcome));
 
 			int pid2 = fork();
 			if(pid2<0){ printf("fork err\n"); continue;}

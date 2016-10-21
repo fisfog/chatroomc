@@ -23,6 +23,9 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
+/* curses lib */
+#include <curses.h>
+
 
 #define SERVPORT 20123
 
@@ -67,3 +70,4 @@ int login_serv(int, loginfo *);
 
 /* clifunc.c */
 int login_cli(int);
+int login_cli_cgi(int, WINDOW *);
