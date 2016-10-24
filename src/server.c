@@ -48,7 +48,9 @@ int main(int argc, char *argv[])
 			printf("this is child process[%d]\n", getpid());
 			inet_ntop(AF_INET, &cliaddr.sin_addr, addr, sizeof(addr));
 			printf("Recieved connection form [%s] at PORT [%d]\n", addr, ntohs(cliaddr.sin_port));
+			client_count = getClientCount(mq_fd);	
 			int cliNo = client_count;
+			putClientCount(mq_fd, client_count);
 
 			loginfo *cli_log_info = (loginfo *)malloc(sizeof(loginfo));
 			cli_log_info->cliaddr = &cliaddr;
@@ -68,7 +70,7 @@ int main(int argc, char *argv[])
 						kill(pid2, SIGKILL);
 						break;
 					}
-					printf("CLIENT[%s]PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);
+					printf("CLIENT[%s]:PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);
 					
 					time_t t = time(NULL);
 					struct tm *local = localtime(&t);
@@ -80,7 +82,7 @@ int main(int argc, char *argv[])
 	//				printf("DEBUG: [%d], buf[%s]\n", strlen(buf), buf);
 					client_count = getClientCount(mq_fd);
 					for(i=1;i<=client_count;i++){
-						if(i==cliNo) continue;
+						//if(i==cliNo) continue;
 						mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
 						sendMq(mq_fd, msg);
 					}
