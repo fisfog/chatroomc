@@ -5,6 +5,8 @@
 #define SERVERIP "127.0.0.1"
 
 int nrows, ncols;
+pthread_t ntid;
+
 
 int main(int argc, char *argv[])
 {
@@ -59,41 +61,31 @@ int main(int argc, char *argv[])
 	wrefresh(winout);
 	*/
 	WINDOW *winin, *winout;
+	winin = newwin(0, 0, nrows-1, 0);
+	winout = newwin(nrows-2, 0, 0, 0);
+	scrollok(winout, 1);
 
-	pid = fork();
-	if(pid<0){
-		printf("fork err\n");
-		exit(1);
-	}else if(pid>0){
-		winin = newwin(0, 0, nrows-1, 0);
+	thrarg ta = {winout, sockfd, servip};
+
+	ret = pthread_create(&ntid, NULL, (void *)thr_fn, &ta);
+	if(ret != 0){
+		wprintw(winout, "cant create thread\n");
+		exit(ret);
+	}
+
+	wprintw(winin, "> ");
+	wrefresh(winin);
+	while(!wgetnstr(winin, buf, MAXLEN)){
+		sendMsg(sockfd, buf, strlen(buf));
+		wclrtoeol(winin);
 		wprintw(winin, "> ");
 		wrefresh(winin);
-		while(!wgetnstr(winin, buf, MAXLEN)){
-			sendMsg(sockfd, buf, strlen(buf));
-			wprintw(winin, "> ");
-			wrefresh(winin);
-			wclrtoeol(winin);
-		}
-	}else{
-		winout = newwin(nrows-2, 0, 0, 0);
-		scrollok(winout, 1);
-		while(1){
-			memset(buf2, 0x00, sizeof(buf2));
-			if(recvMsg(sockfd, buf2, &len)<0){
-				wprintw(winout,"Server [%s] closed connection\n", servip);
-				wrefresh(winout);
-				break;
-			}
-			wprintw(winout, "%s\n", buf2);
-			wrefresh(winout);
-		}
 	}
+	
 	close(sockfd);
 
-	if(getpid()==pid)
-		delwin(winin);
-	else
-		delwin(winout);
+	delwin(winin);
+	delwin(winout);
 
 	endwin();
 	return 0;

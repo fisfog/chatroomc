@@ -24,3 +24,21 @@ login_cli_cgi(int connfd, WINDOW *wp)
 	sendMsg(connfd, nname, strlen(nname));
 	return 0;
 }
+
+void *
+thr_fn(thrarg *arg)
+{
+	char buf[MAXLEN + 1];
+	int len;
+	while(1){
+		memset(buf, 0x00, sizeof(buf));
+		if(recvMsg(arg->socket, buf, &len)<0){
+			wprintw(arg->wnd, "Server [%s] closed connection\n", arg->servip);
+			wrefresh(arg->wnd);
+			break;
+		}
+		wprintw(arg->wnd, "%s\n", buf);
+		wrefresh(arg->wnd);
+	}
+	return ((void *)0);
+}

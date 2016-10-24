@@ -26,6 +26,9 @@
 /* curses lib */
 #include <curses.h>
 
+/* pthread lib */
+#include <pthread.h>
+
 
 #define SERVPORT 20123
 
@@ -50,6 +53,12 @@ typedef struct lginfo{
 	char			login_name[50+1]; // user input nick name
 }loginfo;
 
+/* thread func arg st*/
+typedef struct thr_arg{
+	WINDOW	*wnd;
+	int	socket;
+	char	*servip;
+}thrarg;
 #endif
 
 
@@ -71,3 +80,4 @@ int login_serv(int, loginfo *);
 /* clifunc.c */
 int login_cli(int);
 int login_cli_cgi(int, WINDOW *);
+void *thr_fn(thrarg *);
