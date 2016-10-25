@@ -107,7 +107,6 @@ int main(int argc, char *argv[])
 	close(listenfd);
 	free(msg);
 	if(getpid() == fpid){
-		printf("msgctl----------\n");
 		msgctl(mq_fd, IPC_RMID, NULL);
 	}
 
