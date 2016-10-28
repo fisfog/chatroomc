@@ -71,6 +71,7 @@ int mqMsgSTInit(message *, char *, long, long);
 ssize_t sendMq(int, message *);
 ssize_t recvMq(int, message *);
 int tm2DateTimeStr(struct tm *, char *);
+int getCurTimeStr(char *);
 
 /* servfunc.c */
 int getClientCount(int);

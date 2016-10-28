@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 	int pid;
 	int client_count = 0;
 	int fpid = getpid();
+	char tt[19+1] = {0};
+
 
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
@@ -56,6 +58,17 @@ int main(int argc, char *argv[])
 			cli_log_info->cliaddr = &cliaddr;
 			login_serv(connfd, cli_log_info); // client login
 
+			getCurTimeStr(tt);
+			sprintf(buf2, "(%s) %s join the chatroom", tt, cli_log_info->login_name);
+			client_count = getClientCount(mq_fd);
+			for(i=1;i<=client_count;i++){
+				if(i==cliNo) continue;
+				mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
+				sendMq(mq_fd, msg);
+			}
+			putClientCount(mq_fd, client_count);
+
+
 			char welcome[100] = {0};
 			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
 			sendMsg(connfd, welcome, strlen(welcome));
@@ -67,15 +80,23 @@ int main(int argc, char *argv[])
 					memset(buf, 0x00, sizeof(buf));
 					if(recvMsg(connfd, buf, &len)<0){
 						printf("The client [%d] closed the connection.\n", getpid());
+
+						getCurTimeStr(tt);
+						sprintf(buf2, "(%s) %s quit the chatroom", tt, cli_log_info->login_name);
+						client_count = getClientCount(mq_fd);
+						for(i=1;i<=client_count;i++){
+							if(i==cliNo) continue;
+							mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
+							sendMq(mq_fd, msg);
+						}
+						putClientCount(mq_fd, client_count);
+
 						kill(pid2, SIGKILL);
 						break;
 					}
 					printf("CLIENT[%s]:PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);
 					
-					time_t t = time(NULL);
-					struct tm *local = localtime(&t);
-					char tt[19+1] = {0};
-					tm2DateTimeStr(local, tt);
+					getCurTimeStr(tt);
 					
 					sprintf(buf2, "(%s) %s: %s", tt, cli_log_info->login_name, buf);
 				//	strcat(buf, "[B]");

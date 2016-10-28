@@ -133,3 +133,16 @@ tm2DateTimeStr(struct tm *t, char *dts)
 	return 0;
 }
 
+/*
+ * get current time string
+ * format: YYYY-MM-DD HH:MM:SS
+ */
+
+int
+getCurTimeStr(char *cts)
+{
+	time_t t = time(NULL);
+	struct tm *local = localtime(&t);
+	tm2DateTimeStr(local, cts);
+	return 0;
+}
