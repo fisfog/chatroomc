@@ -12,7 +12,7 @@ I build this program to prictice
 
 ## TO DO LIST
 *server*
-- ~~login notify
+- ~~login notify~~
 
 *client*
 - login user list
