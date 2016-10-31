@@ -2,8 +2,6 @@
 
 #include "chatroom.h"
 
-#define SERVERIP "127.0.0.1"
-
 int nrows, ncols;
 pthread_t ntid;
 
@@ -26,10 +24,14 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
+
 	WINDOW *wnd = initscr();
 	getmaxyx(wnd, nrows, ncols);
 
 	WINDOW *logwin = newwin(0,0,0,0);
+
+	wprintw(logwin, "DEBUG: servip[%s]\n", servip);
+	wrefresh(logwin);
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
@@ -45,7 +47,10 @@ int main(int argc, char *argv[])
 	}else{
 		wprintw(logwin,"Cant connect to the server:%s\n", servip);
 		wrefresh(logwin);
-		exit(1);
+		sleep(1);
+		delwin(logwin);
+		endwin();
+		return -1;
 	}
 	// login
 	login_cli_cgi(sockfd, logwin);
