@@ -62,11 +62,8 @@ int main(int argc, char *argv[])
 			sprintf(buf2, "(%s) %s join the chatroom", tt, cli_log_info->login_name);
 			client_count = getClientCount(mq_fd);
 			putClientCount(mq_fd, client_count);
-			for(i=1;i<=client_count;i++){
-				if(i==cliNo) continue;
-				mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
-				sendMq(mq_fd, msg);
-			}
+
+			broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 0);
 
 
 			char welcome[100] = {0};
@@ -85,11 +82,8 @@ int main(int argc, char *argv[])
 						sprintf(buf2, "(%s) %s quit the chatroom", tt, cli_log_info->login_name);
 						client_count = getClientCount(mq_fd);
 						putClientCount(mq_fd, client_count);
-						for(i=1;i<=client_count;i++){
-							if(i==cliNo) continue;
-							mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
-							sendMq(mq_fd, msg);
-						}
+
+						broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 0);
 
 						kill(pid2, SIGKILL);
 						break;
@@ -103,11 +97,9 @@ int main(int argc, char *argv[])
 	//				printf("DEBUG: [%d], buf[%s]\n", strlen(buf), buf);
 					client_count = getClientCount(mq_fd);
 //					printf("DEBUG[%d]: client_count[%d]\n", __LINE__, client_count);
-					for(i=1;i<=client_count;i++){
-						//if(i==cliNo) continue;
-						mqMsgSTInit(msg, buf2, strlen(buf2), 10000+i);
-						sendMq(mq_fd, msg);
-					}
+
+					broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 1);
+
 					putClientCount(mq_fd, client_count);
 				}
 			}else{

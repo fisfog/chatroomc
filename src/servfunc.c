@@ -54,4 +54,18 @@ login_serv(int connfd, loginfo *linfo)
 	return 0;
 }
 
-
+int
+broadcast2ClientsMq(int mqid, char *buf, int client_count, int curCliId, int toSelfFlag)
+{
+	int i;
+	message *msg = (message *)malloc(sizeof(message));
+	for(i=1;i<=client_count;i++){
+		if(!toSelfFlag){
+			if(i==curCliId) continue;
+		}
+		mqMsgSTInit(msg, buf, strlen(buf), 10000+i);
+		sendMq(mqid, msg);
+	}
+	free(msg);
+	return 0;
+}

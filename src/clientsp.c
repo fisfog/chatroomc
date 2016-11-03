@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 
 	WINDOW *logwin = newwin(0,0,0,0);
 
-	wprintw(logwin, "DEBUG: servip[%s]\n", servip);
-	wrefresh(logwin);
+//	wprintw(logwin, "DEBUG: servip[%s]\n", servip);
+//	wrefresh(logwin);
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	bzero(&servaddr, sizeof(servaddr));
@@ -75,6 +75,10 @@ int main(int argc, char *argv[])
 	ret = pthread_create(&ntid, NULL, (void *)thr_fn, &ta);
 	if(ret != 0){
 		wprintw(winout, "cant create thread\n");
+		wrefresh(winout);
+		close(sockfd);
+		delwin(winin);
+		delwin(winout);
 		exit(ret);
 	}
 
@@ -88,7 +92,6 @@ int main(int argc, char *argv[])
 	}
 	
 	close(sockfd);
-
 	delwin(winin);
 	delwin(winout);
 

@@ -59,7 +59,6 @@ typedef struct thr_arg{
 	int	socket;
 	char	*servip;
 }thrarg;
-#endif
 
 
 /* util.c */
@@ -77,8 +76,12 @@ int getCurTimeStr(char *);
 int getClientCount(int);
 int putClientCount(int, int);
 int login_serv(int, loginfo *);
+int broadcast2ClientsMq(int, char *, int, int, int);
+
 
 /* clifunc.c */
 int login_cli(int);
 int login_cli_cgi(int, WINDOW *);
 void *thr_fn(thrarg *);
+
+#endif
