@@ -93,10 +93,7 @@ int main(int argc, char *argv[])
 					getCurTimeStr(tt);
 					
 					sprintf(buf2, "(%s) %s: %s", tt, cli_log_info->login_name, buf);
-				//	strcat(buf, "[B]");
-	//				printf("DEBUG: [%d], buf[%s]\n", strlen(buf), buf);
 					client_count = getClientCount(mq_fd);
-//					printf("DEBUG[%d]: client_count[%d]\n", __LINE__, client_count);
 
 					broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 1);
 

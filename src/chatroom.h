@@ -39,6 +39,10 @@
 #define MSG_W 0200
 #define SVMSG_MODE (MSG_R | MSG_W | MSG_R >> 3 | MSG_R >> 6)
 
+
+#define NORMALM 1
+#define NOTIFYM 2
+
 /* SYSV MQ message st */
 typedef struct mqmesg{
 	long mtype;
@@ -71,6 +75,8 @@ ssize_t sendMq(int, message *);
 ssize_t recvMq(int, message *);
 int tm2DateTimeStr(struct tm *, char *);
 int getCurTimeStr(char *);
+int makeAMsg(char *, char *, int);
+int parseAMsg(char *, char *, int *);
 
 /* servfunc.c */
 int getClientCount(int);
