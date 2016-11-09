@@ -4,17 +4,18 @@ OBJS=server.o util.o servfunc.o
 OBJC=client.o util.o clifunc.o
 OBJCSP=clientsp.o util.o clifunc.o
 LFLAG=-lcurses -lpthread
+OPT=-g -Wall
 
 all: $(OUT)
 
 server: $(OBJS)
-	gcc $(OBJS) -o server 
+	gcc $(OPT) $(OBJS) -o server 
 
 client: $(OBJC)
-	gcc $(OBJC) -o client $(LFLAG)
+	gcc $(OPT) $(OBJC) -o client $(LFLAG)
 
 clientsp: $(OBJCSP)
-	gcc $(OBJCSP) -o clientsp $(LFLAG)
+	gcc $(OPT) $(OBJCSP) -o clientsp $(LFLAG)
 
 server.o: chatroom.h
 client.o: chatroom.h

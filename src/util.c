@@ -151,7 +151,8 @@ getCurTimeStr(char *cts)
 int
 makeAMsg(char *msg, char *buf, int msgType)
 {
-	sprintf(msg, "%d%s", msgType, buf);
+	memset(msg,0x00,sizeof(msg));
+	sprintf(msg, "%02d%s", msgType, buf);
 	return 0;
 }
 
@@ -159,7 +160,7 @@ int
 parseAMsg(char *msg, char *buf, int *msgType)
 {
 	int i;
-	char str[HEADLEN+1];
+	char str[MAXLEN+1];
 	for(i=0;i<2;i++)
 		memset(&str[i],msg[i],1);
 	*msgType = atoi(str);

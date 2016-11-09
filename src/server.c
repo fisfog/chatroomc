@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	socklen_t cliaddr_len;
 	char buf[MAXLEN+1];
 	char buf2[MAXLEN] = {0};
+	char msgbuf[MAXLEN] = {0};
 	char addr[INET_ADDRSTRLEN];
 	int listenfd,connfd;
 	int i,n,len;
@@ -60,15 +61,16 @@ int main(int argc, char *argv[])
 
 			getCurTimeStr(tt);
 			sprintf(buf2, "(%s) %s join the chatroom", tt, cli_log_info->login_name);
+			makeAMsg(msgbuf,buf2,NOTIFYM);
 			client_count = getClientCount(mq_fd);
 			putClientCount(mq_fd, client_count);
 
-			broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 0);
-
+			broadcast2ClientsMq(mq_fd, msgbuf, client_count, cliNo, 0);
 
 			char welcome[100] = {0};
 			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
-			sendMsg(connfd, welcome, strlen(welcome));
+			makeAMsg(msgbuf,welcome,NORMALM);
+			sendMsg(connfd, msgbuf, strlen(msgbuf));
 
 			int pid2 = fork();
 			if(pid2<0){ printf("fork err\n"); continue;}
@@ -80,10 +82,11 @@ int main(int argc, char *argv[])
 
 						getCurTimeStr(tt);
 						sprintf(buf2, "(%s) %s quit the chatroom", tt, cli_log_info->login_name);
+						makeAMsg(msgbuf,buf2,NOTIFYM);
 						client_count = getClientCount(mq_fd);
 						putClientCount(mq_fd, client_count);
 
-						broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 0);
+						broadcast2ClientsMq(mq_fd, msgbuf, client_count, cliNo, 0);
 
 						kill(pid2, SIGKILL);
 						break;
@@ -93,11 +96,12 @@ int main(int argc, char *argv[])
 					getCurTimeStr(tt);
 					
 					sprintf(buf2, "(%s) %s: %s", tt, cli_log_info->login_name, buf);
+					makeAMsg(msgbuf,buf2,NORMALM);
 					client_count = getClientCount(mq_fd);
-
-					broadcast2ClientsMq(mq_fd, buf2, client_count, cliNo, 1);
-
 					putClientCount(mq_fd, client_count);
+
+					broadcast2ClientsMq(mq_fd, msgbuf, client_count, cliNo, 1);
+
 				}
 			}else{
 				while(1){

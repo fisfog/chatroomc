@@ -28,15 +28,19 @@ login_cli_cgi(int connfd, WINDOW *wp)
 void *
 thr_fn(thrarg *arg)
 {
-	char buf[MAXLEN + 1];
+	char msgbuf[MAXLEN + 1];
+	char buf[MAXLEN + 1] = {0};
+	int msgType;
 	int len;
 	while(1){
-		memset(buf, 0x00, sizeof(buf));
-		if(recvMsg(arg->socket, buf, &len)<0){
+		memset(msgbuf, 0x00, sizeof(msgbuf));
+		if(recvMsg(arg->socket, msgbuf, &len)<0){
 			wprintw(arg->wnd, "Server [%s] closed connection\n", arg->servip);
 			wrefresh(arg->wnd);
 			break;
 		}
+		memset(buf,0x00,sizeof(buf));
+		parseAMsg(msgbuf,buf,&msgType);
 		wprintw(arg->wnd, "%s\n", buf);
 		wrefresh(arg->wnd);
 	}
