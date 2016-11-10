@@ -65,12 +65,13 @@ int main(int argc, char *argv[])
 	wprintw(winout, "%s\n", buf);
 	wrefresh(winout);
 	*/
-	WINDOW *winin, *winout;
+	WINDOW *winin, *winout, *winulist;
 	winin = newwin(0, 0, nrows-1, 0);
 	winout = newwin(nrows-2, 0, 0, 0);
+//	winulist = newwin();
 	scrollok(winout, 1);
 
-	thrarg ta = {winout, sockfd, servip};
+	thrarg ta = {winout, winulist, sockfd, servip};
 
 	ret = pthread_create(&ntid, NULL, (void *)thr_fn, &ta);
 	if(ret != 0){

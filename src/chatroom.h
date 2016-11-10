@@ -59,7 +59,8 @@ typedef struct lginfo{
 
 /* thread func arg st*/
 typedef struct thr_arg{
-	WINDOW	*wnd;
+	WINDOW	*wnd_output;
+	WINDOW	*wnd_ulist;
 	int	socket;
 	char	*servip;
 }thrarg;

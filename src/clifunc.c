@@ -35,14 +35,20 @@ thr_fn(thrarg *arg)
 	while(1){
 		memset(msgbuf, 0x00, sizeof(msgbuf));
 		if(recvMsg(arg->socket, msgbuf, &len)<0){
-			wprintw(arg->wnd, "Server [%s] closed connection\n", arg->servip);
-			wrefresh(arg->wnd);
+			wprintw(arg->wnd_output, "Server [%s] closed connection\n", arg->servip);
+			wrefresh(arg->wnd_output);
 			break;
 		}
 		memset(buf,0x00,sizeof(buf));
 		parseAMsg(msgbuf,buf,&msgType);
-		wprintw(arg->wnd, "%s\n", buf);
-		wrefresh(arg->wnd);
+		if(msgType==NOTIFYM){
+			if(strstr(buf, "join")){
+			}
+			else if(strstr(buf, "quit")){
+			}
+		}
+		wprintw(arg->wnd_output, "%s\n", buf);
+		wrefresh(arg->wnd_output);
 	}
 	return ((void *)0);
 }
