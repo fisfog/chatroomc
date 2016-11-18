@@ -30,4 +30,5 @@ clean:
 
 .PHONY:install
 install:
+	-mkdir bin
 	-cp $(OUT) bin

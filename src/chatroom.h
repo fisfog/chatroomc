@@ -40,8 +40,15 @@
 #define SVMSG_MODE (MSG_R | MSG_W | MSG_R >> 3 | MSG_R >> 6)
 
 
-#define NORMALM 1
-#define NOTIFYM 2
+#define NORMALM 1001
+#define NOTIFYM_JOIN 2001
+#define NOTIFYM_QUIT 2002
+
+
+#define NOTIFYINFONUM 3
+#define NOTIFYINFOLEN 20 + 1
+#define NAMELEN 50 + 1
+#define ORIUSERNUM 100
 
 /* SYSV MQ message st */
 typedef struct mqmesg{
@@ -54,7 +61,7 @@ typedef struct mqmesg{
 typedef struct lginfo{
 	struct tm		*login_time; // login time st
 	struct sockaddr_in	*cliaddr; // client IP4 addr st
-	char			login_name[50+1]; // user input nick name
+	char			login_name[NAMELEN]; // user input nick name
 }loginfo;
 
 /* thread func arg st*/
@@ -78,6 +85,8 @@ int tm2DateTimeStr(struct tm *, char *);
 int getCurTimeStr(char *);
 int makeAMsg(char *, char *, int);
 int parseAMsg(char *, char *, int *);
+char **malloc2dCharArray(int, int);
+void free2dCharArray(char **, int);
 
 /* servfunc.c */
 int getClientCount(int);

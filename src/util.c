@@ -147,26 +147,60 @@ getCurTimeStr(char *cts)
 	return 0;
 }
 
-
+/*
+ * make a msg with msg type
+ * like: msg: "hello" msg type: NORMALM
+ * ----> 1001hello
+*/
 int
 makeAMsg(char *msg, char *buf, int msgType)
 {
 	memset(msg,0x00,sizeof(msg));
-	sprintf(msg, "%02d%s", msgType, buf);
+	sprintf(msg, "%04d%s", msgType, buf);
 	return 0;
 }
 
+/*
+ * parse a msg -> msg type + msg buf
+*/
 int
 parseAMsg(char *msg, char *buf, int *msgType)
 {
 	int i;
 	char str[MAXLEN+1];
-	for(i=0;i<2;i++)
+	for(i=0;i<4;i++)
 		memset(&str[i],msg[i],1);
 	*msgType = atoi(str);
 	memset(str, 0x00, sizeof(str));
 	for(i=0;i<strlen(msg);i++)
-		memset(&str[i],msg[i+2],1);
+		memset(&str[i],msg[i+4],1);
 	strcpy(buf, str);
 	return 0;
+}
+
+/*
+ * malloc a char 2D array
+*/
+char **
+malloc2dCharArray(int rows, int cols)
+{
+	char **ptr;
+	int i;
+	ptr = (char **)malloc(sizeof(char)*rows);
+	for(i=0;i<rows;i++)
+		ptr[i] = (char *)malloc(sizeof(char)*cols);
+	return ptr;
+}
+
+/*
+ * free a char 2D array
+ */
+void
+free2dCharArray(char **ptr, int rows)
+{
+	int i;
+	for(i=0;i<rows;i++)
+		free(ptr[i]);
+	free(ptr);
+
 }
