@@ -43,8 +43,10 @@ void
 printUserList(char **userNameList, WINDOW *wnd)
 {
 	int i;
+	wclear(wnd);
+	wprintw(wnd, "current user list:\n");
 	for(i=0;i<ORIUSERNUM;i++){
-		if(userNameList[i]!="")
+		if(strlen(userNameList[i])!=0)
 		{
 			wprintw(wnd, "%s\n", userNameList[i]);
 		}
@@ -64,7 +66,12 @@ thr_fn(thrarg *arg)
 	int i, userIdx;
 	// malloc 2D infoArray
 	infoArray = malloc2dCharArray(NOTIFYINFONUM, NOTIFYINFOLEN);
+	// malloc 2D userNameList 
 	userNameList = malloc2dCharArray(ORIUSERNUM, NAMELEN);
+	
+	for(i=0;i<ORIUSERNUM;i++)
+		memset(userNameList[i],0x00,sizeof(userNameList[i]));
+	
 	while(1){
 		memset(msgbuf, 0x00, sizeof(msgbuf));
 		if(recvMsg(arg->socket, msgbuf, &len)<0){
@@ -74,18 +81,18 @@ thr_fn(thrarg *arg)
 		}
 		memset(buf,0x00,sizeof(buf));
 		parseAMsg(msgbuf,buf,&msgType);
-		for(i=0;i<NOTIFYINFONUM;i++)
-			memset(infoArray[i], 0x00, sizeof(infoArray[i]));
 		if(msgType/10==200){
+			for(i=0;i<NOTIFYINFONUM;i++)
+				memset(infoArray[i], 0x00, sizeof(infoArray[i]));
 			parseNotifyMsg(buf, infoArray);
 			userIdx = atoi(infoArray[0]);
 			if(msgType==NOTIFYM_JOIN){
 				strcpy(userNameList[userIdx], infoArray[2]);
-				sprintf(buf,"(%s) %s join the chatroom\n", infoArray[1], infoArray[2]);
+				sprintf(buf,"(%s) %s join the chatroom", infoArray[1], infoArray[2]);
 			}
 			if(msgType==NOTIFYM_QUIT){
 				memset(userNameList[userIdx],0x00,sizeof(userNameList[userIdx]));
-				sprintf(buf,"(%s) %s quit the chatroom\n", infoArray[1], infoArray[2]);
+				sprintf(buf,"(%s) %s quit the chatroom", infoArray[1], infoArray[2]);
 			}
 			printUserList(userNameList, arg->wnd_ulist);
 		}

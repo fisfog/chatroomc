@@ -68,8 +68,9 @@ int main(int argc, char *argv[])
 	WINDOW *winin, *winout, *winulist;
 	winin = newwin(0, 0, nrows-1, 0);
 	winout = newwin(nrows-2, 0, 0, 0);
-	winulist = newwin(nrows-2, 0, 0, ncols-10);
+	winulist = newwin(nrows-2, 0, 0, ncols-20);
 	scrollok(winout, 1);
+	scrollok(winulist, 1);
 
 	thrarg ta = {winout, winulist, sockfd, servip};
 
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
 		close(sockfd);
 		delwin(winin);
 		delwin(winout);
+		delwin(winulist);
 		exit(ret);
 	}
 

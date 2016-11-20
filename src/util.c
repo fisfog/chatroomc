@@ -186,7 +186,7 @@ malloc2dCharArray(int rows, int cols)
 {
 	char **ptr;
 	int i;
-	ptr = (char **)malloc(sizeof(char)*rows);
+	ptr = (char **)malloc(sizeof(char *)*rows);
 	for(i=0;i<rows;i++)
 		ptr[i] = (char *)malloc(sizeof(char)*cols);
 	return ptr;
