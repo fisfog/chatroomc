@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 	winout = newwin(nrows-2, 0, 0, 0);
 	winulist = newwin(nrows-2, 0, 0, ncols-20);
 	scrollok(winout, 1);
-	scrollok(winulist, 1);
+	scrollok(winulist, 0);
 
 	thrarg ta = {winout, winulist, sockfd, servip};
 

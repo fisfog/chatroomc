@@ -16,3 +16,7 @@ I build this program to prictice
 
 *client*
 - login user list
+
+## DROP THIS PIECE OF SHIT
+- too many bugs with design error
+- to rewrite this program is significant for me
