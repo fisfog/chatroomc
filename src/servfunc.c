@@ -22,7 +22,7 @@ putClientCount(int mqfd, int client_count)
 {
 	char cc[10] = {0};
 	message *msg = (message *)malloc(sizeof(message));
-	sprintf(cc, "%d", client_count);
+	snprintf(cc, sizeof(cc), "%d", client_count);
 	mqMsgSTInit(msg, cc, strlen(cc), 1);
 	if(sendMq(mqfd, msg)<0) return -1;
 	free(msg);

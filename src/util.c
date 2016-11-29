@@ -121,7 +121,8 @@ recvMq(int id, message *mptr)
 int
 tm2DateTimeStr(struct tm *t, char *dts)
 {
-	sprintf(dts,
+	snprintf(dts,
+		sizeof(dts),
 		"%04d-%02d-%02d %02d:%02d:%02d",
 		t->tm_year+1900,
 		t->tm_mon+1,
@@ -156,7 +157,7 @@ int
 makeAMsg(char *msg, char *buf, int msgType)
 {
 	memset(msg,0x00,sizeof(msg));
-	sprintf(msg, "%04d%s", msgType, buf);
+	snprintf(msg, sizeof(msg), "%04d%s", msgType, buf);
 	return 0;
 }
 

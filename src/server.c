@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 			login_serv(connfd, cli_log_info); // client login
 
 			getCurTimeStr(tt);
-			sprintf(buf2, "%d|%s|%s", cliNo, tt, cli_log_info->login_name);
+			snprintf(buf2, sizeof(buf2), "%d|%s|%s", cliNo, tt, cli_log_info->login_name);
 			makeAMsg(msgbuf,buf2,NOTIFYM_JOIN);
 			client_count = getClientCount(mq_fd);
 			putClientCount(mq_fd, client_count);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 			broadcast2ClientsMq(mq_fd, msgbuf, client_count, cliNo, 0);
 
 			char welcome[100] = {0};
-			sprintf(welcome, "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
+			snprintf(welcome, sizeof(welcome), "%s%d%s", "-----welcome to chat room, current user no: ", client_count, "------");
 			makeAMsg(msgbuf,welcome,NORMALM);
 			sendMsg(connfd, msgbuf, strlen(msgbuf));
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 						printf("The client [%d] closed the connection.\n", getpid());
 
 						getCurTimeStr(tt);
-						sprintf(buf2, "%d|%s|%s", cliNo, tt, cli_log_info->login_name);
+						snprintf(buf2, sizeof(buf2), "%d|%s|%s", cliNo, tt, cli_log_info->login_name);
 						makeAMsg(msgbuf,buf2,NOTIFYM_QUIT);
 						client_count = getClientCount(mq_fd);
 						putClientCount(mq_fd, client_count);
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 					
 					getCurTimeStr(tt);
 					
-					sprintf(buf2, "(%s) %s: %s", tt, cli_log_info->login_name, buf);
+					snprintf(buf2, sizeof(buf2), "(%s) %s: %s", tt, cli_log_info->login_name, buf);
 					makeAMsg(msgbuf,buf2,NORMALM);
 					client_count = getClientCount(mq_fd);
 					putClientCount(mq_fd, client_count);

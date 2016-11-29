@@ -88,11 +88,11 @@ thr_fn(thrarg *arg)
 			userIdx = atoi(infoArray[0]);
 			if(msgType==NOTIFYM_JOIN){
 				strcpy(userNameList[userIdx], infoArray[2]);
-				sprintf(buf,"(%s) %s join the chatroom", infoArray[1], infoArray[2]);
+				snprintf(buf, sizeof(buf),"(%s) %s join the chatroom", infoArray[1], infoArray[2]);
 			}
 			if(msgType==NOTIFYM_QUIT){
 				memset(userNameList[userIdx],0x00,sizeof(userNameList[userIdx]));
-				sprintf(buf,"(%s) %s quit the chatroom", infoArray[1], infoArray[2]);
+				snprintf(buf, sizeof(buf), "(%s) %s quit the chatroom", infoArray[1], infoArray[2]);
 			}
 			printUserList(userNameList, arg->wnd_ulist);
 		}
