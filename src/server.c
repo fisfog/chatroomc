@@ -36,9 +36,17 @@ int main(int argc, char *argv[])
 	putClientCount(mq_fd, client_count);
 	message *msg = (message *)malloc(sizeof(message));
 
+	signal(SIGCHLD, sig_chld);
+
 	while(1){
 		cliaddr_len = sizeof(cliaddr);
 		connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &cliaddr_len);
+		if(connfd<0){
+			if(errno == EINTR)
+				continue;
+			else
+				perror("accept error");
+		}
 		client_count = getClientCount(mq_fd);	
 		client_count++;
 		putClientCount(mq_fd, client_count);
@@ -88,7 +96,7 @@ int main(int argc, char *argv[])
 
 						broadcast2ClientsMq(mq_fd, msgbuf, client_count, cliNo, 0);
 
-						kill(pid2, SIGKILL);
+					//	kill(pid2, SIGKILL);
 						break;
 					}
 					printf("CLIENT[%s]:PID[%d]:LOGIN_NAME[%s]:LEN[%d]:MSG[%s]\n", addr, getpid(), cli_log_info->login_name, len, buf);

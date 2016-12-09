@@ -17,6 +17,10 @@ I build this program to prictice
 *client*
 - login user list
 
+## BUGS
+- no user managerment in server
+- user id bug
+
 ## DROP THIS PIECE OF SHIT
 - too many bugs with design error
 - to rewrite this program is significant for me

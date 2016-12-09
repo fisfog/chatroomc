@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <time.h>
+#include <sys/wait.h>
 
 /* socket lib */
 #include <sys/socket.h>
@@ -87,6 +88,7 @@ int makeAMsg(char *, char *, int);
 int parseAMsg(char *, char *, int *);
 char **malloc2dCharArray(int, int);
 void free2dCharArray(char **, int);
+void sig_chld(int);
 
 /* servfunc.c */
 int getClientCount(int);
